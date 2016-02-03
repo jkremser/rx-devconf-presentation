@@ -1,0 +1,48 @@
+rx-devconf-presentation
+=====================
+Jiri Kremser <jkremser@redhat.com>
+v1.0, 2016-02-06
+
+Slides created using the link:https://github.com/hakimel/reveal.js/[reveal.js] Presentation Framework.
+
+
+== Installation
+--
+. Install link:http://nodejs.org/[NodeJS]
+. Install link:http://gruntjs.com/getting-started#installing-the-cli[Grunt]
+. Clone the repo
+
+ $ git clone https://github.com/Jiri-Kremser/rx-devconf-presentation
+
+. Install the NodeJS dependencies (inside the root of the project)
+
+ $ npm install
+
+. Build the slides
+
+ $ grunt
+
+--
+
+== Serving the Presentation
+ $ grunt serve
+
+
+Note:
+____________________________________________________________________
+ If you change the `index.html` and save the file, 
+ grunt watcher will take the change and refresh the browser for you.
+____________________________________________________________________
+
+
+== PDF Export
+Presentations can be exported to PDF via a special print stylesheet. This feature requires that you use Google Chrome.
+
+--
+. Open your presentation with css/print/pdf.css included on the page. The default index HTML lets you add print-pdf anywhere in the query to include the stylesheet, for example: http://jiri-kremser.github.io/rx-devconf-presentation/?print-pdf.
+. Open the in-browser print dialog (`CTRL+P`).
+. Change the Destination setting to Save as PDF.
+. Change the Layout to Landscape.
+. Change the Margins to None.
+. Click Save.
+--

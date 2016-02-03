@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Reactive Programming</title>
+
+		<meta name="description" content="Reactive Programming - presentation"/>
+		<meta name="author" content="Jiri Kremser"/>
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <link rel="shortcut icon" href="/favicon.ico"/>
+		<link rel="stylesheet" href="css/reveal.min.css"/>
+		<link rel="stylesheet" href="css/theme/night.css" id="theme"/>
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css"/>
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+        <section data-background="#333">
+          <h1>Reactive Programming</h1>
+          <h2>Taming the Async Beast</h2>
+          <br/>
+          <p>
+            <a href="https://github.com/Jiri-Kremser">Jiří Kremser</a> &lt; jkremser(at)redhat.com &gt;
+          </p>
+          <p>&#35;hawkular on Freenode</p>
+          <br/><br/><br/><br/>
+          2016-01-27
+        </section>
+
+              <section data-markdown data-background-transition="none" data-background="#333">
+                <script type="text/template">
+## Applied Duality
+|                                  | Single value | Mutiple values |
+|----------------------------------|--------------|----------------|
+| **Pull/Synchronous/Interactive** | Object       | Iterable       |
+| **Push/Asynchronous/Reactive**   | Promise      | Observable     |
+                
+                </script>
+              </section>
+
+              <section data-markdown data-transition="none" data-background-transition="none" data-background="#333">
+                <script type="text/template">
+## Applied Duality
+|                                  | Single value | Mutiple values |
+|----------------------------------|--------------|----------------|
+| **Pull/Synchronous/Interactive** | Object       | Iterable       |
+| <span style="color:orange;">**Push/Asynchronous/Reactive**   | <span style="color:orange;">Promise</span>      | <span style="color:orange;">Observable     |
+                
+                </script>
+              </section>
+
+        <section data-background="#333" data-autoslide="10000">
+          <h2>A-sync?</h2>
+          <img width="496" height="700" src="./pic/nsync.jpg" alt="A-sync"/>
+        </section>
+        <section>
+          <h2>Asynchronous Programming is Annoying</h2>
+          <ul>
+            <li>Each framework has its own way of expressing async/event-based programming
+              <ul>
+                <li>Node.js has callbacks, .then we have Promises, and then events</li>
+                <li>Each concept covers only part of the story</li>
+              </ul>
+            </li>
+            <li>Unification by Observables</li>
+          </ul>
+        </section>
+
+        <section data-autoslide="10000">
+          <h2>Uber Standard?</h2>
+          <img width="700" height="400" src="./pic/standards.png" alt="standards"/>
+        </section>
+
+        <section data-background="#308070">
+          <section>
+            <h2>FRP to the Rescue</h2>
+            <ul>
+              <li>Functional Reactive Programming</li>
+              <li>            Language agnostic model with 3 concepts:
+                <ol>
+                  <li>Observer, Observable</li>
+                  <li>Query operations (filter, map, reduce, etc.)</li>
+                  <li>How, Where, When (Schedulers)</li>
+                </ol>
+                <i>language in language</i></li>
+              </ul>
+            </section>
+					<section>
+						<h2>What is Observable?</h2>
+						<ul>
+              <li>represents a push based collection</li>
+              <li>any number of values over any amount of time</li>
+              <li>can be combined w/ other observables</li>
+              <li>memory effective</li>
+              <li>monad</li>
+            </ul>
+					</section>
+
+          <section data-markdown>
+                <script type="text/template">
+## Observable vs Iterable
+| Iterable            | <span style="color:orange;">Observable</span> |
+|---------------------|--------------------|
+| *pull*              | *push*             |
+| T next()            | onNext(T)          |
+| throws Exceptions   | onError(Exception) |
+| return;             | onCompleted()      |
+                (onNext)*(onError|onCompleted)?
+                </script>
+              </section>
+
+          <section>
+            <h2>Observable vs Promise</h2>
+            <ul>
+              <li>cancelation</li>
+              <li>Rx.Observable.from(promise)</li>
+              <li>Promise.then() ~ Observable.flatMap()</li>
+              <li>...</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Combinators</h2>
+            <ul>
+              <li>a type constructor M and two operations, bind and return </li>
+              <li>flatMap - bind function</li>
+              <li>Observable.of() - return / unit function</li>
+              <li><a href="http://rxmarbles.com/#distinct">Marble diagrams</a></li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Implementations in *.js</h2>
+            <ul><li>RxJS
+                <ul>
+                  <li><a href="https://github.com/Reactive-Extensions/RxJS">4.x</a></li>
+                  <li><a href="https://github.com/ReactiveX/RxJS">5.x</a></li>
+                </ul>
+              </li>
+            
+              <li>and the others
+                <ul>
+                  <li><a href="https://baconjs.github.io/">Bacon.js</a></li>
+                  <li><a href="https://rpominov.github.io/kefir/">Kefir.js</a></li>
+                </ul>
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>RX is everywhere</h2>
+            <ul>
+              <li>Java</li>
+              <li>.NET</li>
+              <li>Scala, Groovy, Clojure</li>
+              <li>Objective-C</li>
+              <li>Android SDK</li>
+              <li>C++</li>
+              <li>Python</li>
+              <li>Ruby</li>
+              <li>Dart</li>
+              <li>PHP</li>
+              <li>Haskell</li>
+              <li>...</li>
+
+            </ul>
+          </section>
+
+          <section>
+            <h2>Stream</h2>
+              <img width="500" height="460" src="./pic/zen.jpg" alt="zen"/>
+          </section>
+				</section>
+
+
+      <section data-background-color="rgba(50,200,90,0.4)">
+      <!--https://jsbin.com/dinilecori/1/edit?html,js,console,output-->
+        <h1><a href="https://jsbin.com/duzetej/4/edit?html,js,console,output">Demo</a></h1>
+        <small>Talk is cheap ;)</small>
+      </section>
+
+		  <section data-background-color="rgba(50,200,90,0.4)">
+				<h2>Live long and prosper</h2><br/><br/>
+        <p>This presentation</p>
+			  <img width="220" height="220" src="./pic/qr.png" alt="QR code with link to slides"/>
+        <p><a href="https://goo.gl/vG6J7J" target="_blank">https://goo.gl/vG6J7J</a></p>
+			</section>
+
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 960,
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        // Bounds for smallest/largest possible scale to apply to content
+        minScale: 0.2,
+        maxScale: 1.0,
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'fade', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+    <script src="//localhost:35729/livereload.js"></script>
+	</body>
+</html>
