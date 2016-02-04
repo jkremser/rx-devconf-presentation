@@ -43,7 +43,7 @@
 
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
-        <section data-background="#333">
+        <section data-state="intro-style">
           <h1>Reactive Programming</h1>
           <h2>Taming the Async Beast</h2>
           <br/>
@@ -54,8 +54,8 @@
           <br/><br/><br/><br/>
           2016-01-27
         </section>
-
-              <section data-markdown data-background-transition="none" data-background="#333">
+<!--
+              <section data-markdown data-background-transition="none">
                 <script type="text/template">
 ## Applied Duality
 |                                  | Single value | Mutiple values |
@@ -66,7 +66,7 @@
                 </script>
               </section>
 
-              <section data-markdown data-transition="none" data-background-transition="none" data-background="#333">
+              <section data-markdown data-transition="none" data-background-transition="none">
                 <script type="text/template">
 ## Applied Duality
 |                                  | Single value | Mutiple values |
@@ -76,17 +76,62 @@
                 
                 </script>
               </section>
+-->
 
-        <section data-background="#333" data-autoslide="10000">
+
+              <section>
+              <h2>Applied Duality</h2>
+              <table>
+                <thead>
+                  <tr>
+                  <th></th>
+                    <th>Single value</th>
+                    <th>Mutiple values</th>
+                  </tr>
+                </thead>
+                <!-- <tr><td></td><td><b>Single value</b></td><td><b>Mutiple values</b></td></tr> -->
+                <tbody>
+                  <tr><td><b>Pull/Synchronous/Interactive</b></td><td>Object</td><td>Iterable</td></tr>
+                  <tr><td><b>Push/Asynchronous/Reactive</b></td><td>Future/Promise/Task</td><td><span class="fragment highlight-orange">Observable</span></td></tr>
+                </tbody>
+              </table>
+              <aside class="notes">
+                <ul>
+                <li>In Pull model: Data consumer synchronously pulls from producer</li>
+                <li>In Push model: Data producer asynchronoulsy pushes to consumers</li>
+                </ul>
+              </aside>
+               </section>
+               <!--
+              <section data-markdown data-transition="none" data-background-transition="none">
+                <script type="text/template">
+## Applied Duality
+|                                  | Single value | Mutiple values |
+|----------------------------------|--------------|----------------|
+| **Pull/Synchronous/Interactive** | Object       | Iterable       |
+| <span style="color:orange;">**Push/Asynchronous/Reactive**   | <span style="color:orange;">Future</span>      | <span style="color:orange;">Observable     |
+                
+                </script>
+              </section> -->
+
+        <section data-autoslide="10000">
           <h2>A-sync?</h2>
-          <img width="496" height="700" src="./pic/nsync.jpg" alt="A-sync"/>
+          <img width="350" height="530" src="./pic/nsync.jpg" alt="A-sync"/>
         </section>
+        <section data-autoslide="10000">
+          <h2 style="position: relative;top:-240px;left:0">Async!</h2>
+          <i>Multiple events and computations happening simultaneously</i>
+          <aside class="notes">
+          Not necessarily multi-threading - JavaScript event loop.
+          </aside>
+        </section>
+
         <section>
           <h2>Asynchronous Programming is Annoying</h2>
           <ul>
-            <li>Each framework has its own way of expressing async/event-based programming
+            <li>Each language/framework has its own way of expressing async/event-based programming
               <ul>
-                <li>Node.js has callbacks, .then we have Promises, and then events</li>
+                <li>callbacks, Promises/Futures, listeners, low level events, ...</li>
                 <li>Each concept covers only part of the story</li>
               </ul>
             </li>
@@ -94,9 +139,25 @@
           </ul>
         </section>
 
-        <section data-autoslide="10000">
+        <section>
+          <h2>Asynchronous Programming is Annoying</h2>
+          <ul>
+            <li>Callback<pre><code data-trim contenteditable>public void getData(Callback&lt;T> callMeMaybe);</code></pre></li>
+            <li>Future/Promise<pre><code data-trim contenteditable>public Future&lt;T> getData();</code></pre></li>
+            <li>WT*?<pre><code data-trim contenteditable>public Future&lt;List&lt;Future&lt;T>>> getData();</code></pre></li>
+            <li class="fragment">Observable<pre><code data-trim contenteditable>public Observable&lt;T> getData();</code></pre><img width="200px" src="./pic/pinkunicorn.jpg"/></li>
+          </ul>
+          <aside class="notes">
+            Each techniquie needs to justify itself, oftenly by attacking the status quo.
+          </aside>
+        </section>
+
+        <section data-autoslide="15000">
           <h2>Uber Standard?</h2>
           <img width="700" height="400" src="./pic/standards.png" alt="standards"/>
+          <aside class="notes">
+          15 sec - auto switch
+          </aside>
         </section>
 
         <section data-background="#308070">
@@ -104,7 +165,15 @@
             <h2>FRP to the Rescue</h2>
             <ul>
               <li>Functional Reactive Programming</li>
-              <li>            Language agnostic model with 3 concepts:
+            </ul>
+            <br/>
+            <img width="400px" src="./pic/lambda.jpg"/>
+            </section>
+
+          <section>
+            <h2>FRP</h2>
+            <ul>
+              <li>Language agnostic model with 3 concepts:
                 <ol>
                   <li>Observer, Observable</li>
                   <li>Query operations (filter, map, reduce, etc.)</li>
@@ -113,6 +182,7 @@
                 <i>language in language</i></li>
               </ul>
             </section>
+
 					<section>
 						<h2>What is Observable?</h2>
 						<ul>
@@ -137,6 +207,19 @@
                 </script>
               </section>
 
+                        <section>
+                <table>
+                <tr><td><b>Iterable</b></td><td><b><span style="color:orange;">Observable</span></b></td></tr>
+                <tr><td>pull</td><td>push</td></tr>
+                <tr><td><pre><code>T next()</code></pre></td><td><pre><code>onNext(T)</code></pre></td></tr>
+                <tr><td><pre><code>throws new Exception();</code></pre></td><td><pre><code>onError(Exception)</code></pre></td></tr>
+                <tr><td><pre><code>return;</code></pre></td><td><pre><code>onCompleted()</code></pre></td></tr>
+                </table>
+                <pre><code>todo: barvicky, obrazek
+                (onNext)*(onError|onCompleted)?
+                </code></pre>
+              </section>
+
           <section>
             <h2>Observable vs Promise</h2>
             <ul>
@@ -146,6 +229,10 @@
               <li>...</li>
             </ul>
           </section>
+
+
+      <!--     demo - 1
+          https://gist.github.com/Jiri-Kremser/403d2e11d772174d3957 -->
 
           <section>
             <h2>Combinators</h2>
@@ -158,39 +245,62 @@
           </section>
 
           <section>
-            <h2>Implementations in *.js</h2>
-            <ul><li>RxJS
-                <ul>
-                  <li><a href="https://github.com/Reactive-Extensions/RxJS">4.x</a></li>
-                  <li><a href="https://github.com/ReactiveX/RxJS">5.x</a></li>
-                </ul>
-              </li>
-            
-              <li>and the others
-                <ul>
-                  <li><a href="https://baconjs.github.io/">Bacon.js</a></li>
-                  <li><a href="https://rpominov.github.io/kefir/">Kefir.js</a></li>
-                </ul>
-              </li>
+            <div class="stretch">
+            <iframe width="1200px" height="800px" src="http://rxmarbles.com/#scan" allowfullscreen="allowfullscreen" frameborder="0" style="max-width: 500%;width: 150%;height: 800px;max-height: 500%;-webkit-transform: scale(0.8);-webkit-transform-origin: 0 0;"></iframe>
+            </div>
+          </section>
+
+          <section>
+            <h2>RX is everywhere (JVM)</h2>
+            <ul>
+              <li>Java<pre><code data-trim contenteditable>
+Observable.interval(1, TimeUnit.SECONDS)
+          .subscribe(System.out::println);
+              </code></pre></li>
+              <li>Scala<pre><code data-trim contenteditable>
+Observable.interval(1, TimeUnit.SECONDS)
+          .subscribe(println(_))
+              </code></pre></li>
+              <li>Groovy<pre><code data-trim contenteditable>
+Observable.interval(1, TimeUnit.SECONDS)
+          .subscribe{println it}
+              </code></pre></li>
+              <li>JRuby<pre><code data-trim contenteditable>
+Observable.interval(1, TimeUnit.SECONDS)
+          .subscribe {|val| puts val}
+              </code></pre></li>
+              <li>Clojure<pre><code data-trim contenteditable>
+(->
+   (Observable/interval 1 TimeUnit/SECONDS)
+   (.subscribe (fn [arg] (pringln arg))))
+              </code></pre></li>
+
             </ul>
           </section>
 
           <section>
             <h2>RX is everywhere</h2>
-            <ul>
-              <li>Java</li>
-              <li>.NET</li>
-              <li>Scala, Groovy, Clojure</li>
-              <li>Objective-C</li>
-              <li>Android SDK</li>
-              <li>C++</li>
-              <li>Python</li>
-              <li>Ruby</li>
-              <li>Dart</li>
-              <li>PHP</li>
-              <li>Haskell</li>
-              <li>...</li>
-
+            <ul class="wider">
+              <li>.NET<pre><code data-trim contenteditable>
+Observable.Interval(TimeSpan.FromSeconds(1))
+          .Subscribe(x => Console.WriteLine(x));
+              </code></pre></li>
+              <li>C++<pre><code data-trim contenteditable>
+rx::observable&lt;>::interval(std::chrono::seconds(1))
+                     .subscribe(
+                        [](long v){std::cout &lt;&lt; v;},
+                        [](){std::cout &lt;&lt; "OnCompleted";}
+                     )
+              </code></pre></li>
+              <li>Python<pre><code data-trim contenteditable>
+Observable.interval(1000)
+          .subscribe(lambda x:  print x)
+              </code></pre></li>
+              <li>PHP<pre><code data-trim contenteditable>
+\Rx\Observable::interval(1000, $scheduler)
+    ->subscribe(function ($x) { echo $x; });
+              </code></pre></li>
+              <li>Dart, Haskell, Android SDK, Objective-C &amp; Swift</li>
             </ul>
           </section>
 
@@ -207,8 +317,13 @@
         <small>Talk is cheap ;)</small>
       </section>
 
+      <section data-background-color="rgba(50,200,90,0.4)">
+      <p data-height="500" data-theme-id="0" data-slug-hash="xZaGWy" data-default-tab="js" data-user="jkremser" class='codepen'>See the Pen <a href='http://codepen.io/jkremser/pen/xZaGWy/'>xZaGWy</a> by Jiri Kremser (<a href='http://codepen.io/jkremser'>@jkremser</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
+        <script async src="//assets.codepen.io/assets/embed/ei.js"></script>
+      </section>
+
 		  <section data-background-color="rgba(50,200,90,0.4)">
-				<h2>Live long and prosper</h2><br/><br/>
+				<h2>Make your APIs observable</h2><br/><br/>
         <p>This presentation</p>
 			  <img width="220" height="220" src="./pic/qr.png" alt="QR code with link to slides"/>
         <p><a href="https://goo.gl/vG6J7J" target="_blank">https://goo.gl/vG6J7J</a></p>

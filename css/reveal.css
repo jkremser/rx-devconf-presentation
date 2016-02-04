@@ -188,6 +188,7 @@ body {
 }
 
 .reveal .slides section .fragment.highlight-red,
+.reveal .slides section .fragment.highlight-orange,
 .reveal .slides section .fragment.highlight-current-red,
 .reveal .slides section .fragment.highlight-green,
 .reveal .slides section .fragment.highlight-current-green,
@@ -197,6 +198,9 @@ body {
 }
 	.reveal .slides section .fragment.highlight-red.visible {
 		color: #ff2c2d
+	}
+	.reveal .slides section .fragment.highlight-orange.visible {
+		color: #ffa500;
 	}
 	.reveal .slides section .fragment.highlight-green.visible {
 		color: #17ff2e;
@@ -1892,4 +1896,20 @@ body {
   padding-right: 12px;
   background: #494949;
   border-radius: 10px;  
+}
+
+li {
+  margin-top: 15px !important;
+}
+
+h1, h2, h3 {
+  margin-bottom: 55px !important;	
+}
+
+pre {
+  width: 500px !important;
+}
+
+ul.wider pre {
+  width: 700px !important;
 }
