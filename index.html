@@ -91,18 +91,27 @@
 				</ul>
 				<aside class="notes">
 					<ul>
-						<li>Each techniquie needs to justify itself, oftenly by attacking the status quo.</li>
+						<li>Each technique needs to justify itself, oftenly by attacking the status quo.</li>
 						<li>So why am i talking about it? How reactive programming can help here?</li>
 					</ul>
 				</aside>
 			</section>
 
 			<section data-autoslide="20000">
-				<h2>Uber Standard?</h2>
-				<img width="700" height="400" src="./pic/standards.png" alt="standards"/>
+				<h2>Where to find it?</h2>
+				<h4>..in Rx libraries</h4><br/>
 				<blockquote cite="https://twitter.com/petecordell">
-					&ldquo;Telling a programmer there's already a library to do X is like telling a songwriter there's already a song about love.&rdquo;
+					&ldquo;Telling a programmer there's already a library to do ${x} is like telling a songwriter there's already a song about love.&rdquo;
+					<footer style="text-align: right;">--internets</footer>
 				</blockquote>
+				<aside class="notes">
+					20 sec - auto switch
+				</aside>
+			</section>
+
+			<section data-autoslide="20000">
+				<h2>Uber Standard? Yeah sure..</h2>
+				<img width="700" height="400" src="./pic/standards.png" alt="standards"/>
 				<aside class="notes">
 					20 sec - auto switch
 				</aside>
@@ -110,26 +119,27 @@
 
 			<!-- <section data-background="#308070"> -->
 			<section>
-				<h2>FRP to the Rescue</h2>
-				<ul>
-					<li>Functional Reactive Programming</li>
-				</ul>
-				<br/>
-				<img width="350px" src="./pic/lambda.jpg"/>
-			</section>
-
-			<section>
 				<h2>FRP</h2>
 				<ul>
+					<li>Functional Reactive Programming</li>
 					<li>Language agnostic model with 3 concepts:
 						<ol>
 							<li>Observer, Observable</li>
-							<li>Query operations (filter, map, reduce, etc.)</li>
+							<li>Combinators (filter, map, reduce, etc.)</li>
 							<li>How, Where, When (Schedulers)</li>
 						</ol>
-						<i>language in language</i>
+						<br/>
 					</li>
+					<li>Why functional?</li>
 				</ul>
+				<aside class="notes">
+					Combinators ~ Operators
+				</aside>
+			</section>
+
+			<section>
+				<h2>Because..</h2>
+				<img width="350px" src="./pic/lambda.jpg"/>
 			</section>
 
 			<section>
@@ -173,130 +183,148 @@
 				</aside>
 			</section>
 
-			<section>
-				<h2>What is Observable?</h2>
-				<ul>
-					<li>represents a push based collection</li>
-					<li class="fragment">can be combined with other observables</li>
-					<li class="fragment">monad</li>
-					<li class="fragment" style="color:orange;">any number of values over any amount of time</li>
-				</ul>
-			</section>
-
-			<section>
-				<h2>Memory Effectiveness</h2>
-				<pre><code data-trim contenteditable>
-Stream.of(3, 1, 4, 1, 5, 9, 2)
-			.flatMap(x -> Stream.of(x, x))
-			.map(x -> x * 2)
-			.filter(x -> x > new Random().nextInt(9));
-				</pre></code>
-				vs
-				<pre><code data-trim contenteditable>
-Observable.just(3, 1, 4, 1, 5, 9, 2)
-			.flatMap(x -> Observable.just(x, x))
-			.map(x -> x * 2)
-			.filter(x -> x > new Random().nextInt(9));
-				</pre></code>
-				<aside class="notes">
+			<section data-background="#308070">
+				<section>
+					<h2>What is Observable?</h2>
 					<ul>
-						<li>intermediate results</li>
-						<li>1 by 1 processing</li>
-						<li>lazy approach, no observer - no processing</li>
-						<li>hot vs cold</li>
+						<li>represents a push based collection</li>
+						<li class="fragment">can be combined with other observables</li>
+						<li class="fragment">monad</li>
+						<li class="fragment" style="color:orange;">any number of values over any amount of time</li>
 					</ul>
-				</aside>
-			</section>
+				</section>
 
-			<!-- <section data-markdown>
+				<section>
+					<h2>Memory Effectiveness</h2>
+					<pre style="width: 550px !important;"><code data-trim contenteditable>
+						Stream.of(3, 1, 4, 1, 5, 9, 2)
+						.flatMap(x -> Stream.of(x, x))
+						.map(x -> x * 2)
+						.filter(x -> x > new Random().nextInt(9));
+					</pre></code>
+					vs
+					<pre style="width: 550px !important;"><code data-trim contenteditable>
+						Observable.just(3, 1, 4, 1, 5, 9, 2)
+						.flatMap(x -> Observable.just(x, x))
+						.map(x -> x * 2)
+						.filter(x -> x > new Random().nextInt(9));
+					</pre></code>
+					<aside class="notes">
+						<ul>
+							<li>intermediate results => less GC</li>
+							<li>1 by 1 processing, data is only iterated over once</li>
+							<li>hot potatoe</li>
+							<li>lazy approach, no observer - no processing</li>
+						</ul>
+					</aside>
+				</section>
+
+				<!-- <section data-markdown>
 				<script type="text/template">
-					## Observable vs Iterable
-					| Iterable            | <span style="color:orange;">Observable</span> |
-					|---------------------|--------------------|
-					| *pull*              | *push*             |
-					| T next()            | onNext(T)          |
-					| throws Exceptions   | onError(Exception) |
-					| return;             | onCompleted()      |
-					(onNext)*(onError|onCompleted)?
-				</script>
-			</section> -->
+				## Observable vs Iterable
+				| Iterable            | <span style="color:orange;">Observable</span> |
+				|---------------------|--------------------|
+				| *pull*              | *push*             |
+				| T next()            | onNext(T)          |
+				| throws Exceptions   | onError(Exception) |
+				| return;             | onCompleted()      |
+				(onNext)*(onError|onCompleted)?
+			</script>
+		</section> -->
 
-			<section>
-				<table>
-					<tr><td><b>Iterable</b></td><td><b><span style="color:orange;">Observable</span></b></td></tr>
-					<tr><td>pull</td><td>push</td></tr>
-					<tr><td><pre><code>T next()</code></pre></td><td><pre><code>onNext(T)</code></pre></td></tr>
-					<tr><td><pre><code>throws new Exception();</code></pre></td><td><pre><code>onError(Exception)</code></pre></td></tr>
-					<tr><td><pre><code>return;</code></pre></td><td><pre><code>onCompleted()</code></pre></td></tr>
-				</table>
-				<br/>
-				(<span style="color:#9cf;">onNext</span>)*(<span style="color: #f97;">onError</span>|<span style="color:#5f1;">onCompleted</span>)?
+		<section>
+			<table>
+				<tr><td><b>Iterable</b></td><td><b><span style="color:orange;">Observable</span></b></td></tr>
+				<tr><td>pull</td><td>push</td></tr>
+				<tr><td><pre><code>T next()</code></pre></td><td><pre><code>onNext(T)</code></pre></td></tr>
+				<tr><td><pre><code>throws new Exception();</code></pre></td><td><pre><code>onError(Exception)</code></pre></td></tr>
+				<tr><td><pre><code>return;</code></pre></td><td><pre><code>onCompleted()</code></pre></td></tr>
+			</table>
+			<br/>
+			(<span style="color:#aef;">onNext</span>)*(<span style="color: #f97;">onError</span>|<span style="color:#5f1;">onCompleted</span>)?
+			<br/><br/>
+			<div style="text-align: left;">
+				happy paths:<br/>
+				─ <span style="color:#aef;">onNext </span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ … ⟶<br/>
+				─ <span style="color:#aef;"> onNext </span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#5f1;">onCompleted</span> ⟼
 				<br/><br/>
-				<div style="text-align: left;">
-					happy paths:<br/>
-					─ <span style="color:#9cf;">onNext </span> ─ <span style="color:#9cf;">onNext</span> ─ <span style="color:#9cf;">onNext</span> ─ <span style="color:#9cf;">onNext</span> ─ <span style="color:#9cf;">onNext</span> ─ … ⟶<br/>
-					─ <span style="color:#9cf;"> onNext </span> ─ <span style="color:#9cf;">onNext</span> ─ <span style="color:#9cf;">onNext</span> ─ <span style="color:#5f1;">onCompleted</span> ⟼
-					<br/><br/>
-					less happy path:<br/>
-					─ <span style="color:#9cf;">onNext </span> ─ <span style="color:#9cf;">onNext</span> ─ <span style="color:#9cf;">onNext</span> ─ <span style="color:#9cf;">onNext</span> ─ <span style="color:#f97;">onError</span> ⟼<br/>
-				</div>
-			</section>
+				less happy path:<br/>
+				─ <span style="color:#aef;">onNext </span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#f97;">onError</span> ⟼<br/>
+			</div>
+		</section>
 
-			<section>
-				<h2>Observable vs Promise/Future</h2>
+		<section>
+			<h2>Observable vs Promise/Future</h2>
+			<ul>
+				<li>cancelation</li>
+				<li>Rx.Observable.from(promise)</li>
+				<li>Promise.then() ~ Observable.flatMap()</li>
+				<li>...</li> todo:
+			</ul>
+		</section>
+
+		<section>
+			<h2>Factories</h2>
+			<ul>
+				<li>.just()</li>
+				<li>.create()</li>
+				<li>.from()</li>
+				<li>.range()</li>
+				<li>.repeat()</li>
+				<li>.interval()</li>
+				<li>.timer()</li>
+				<li>.empty() / .never() / .throw()</li>
+				<li>...</li>
+			</ul>
+		</section>
+
+		<section>
+			<h2>Combinators for Observable[T]</h2>
+			<ul>
+				<li>.map(f: T -> R): Observable[R]</li>
+				<li>.flatMap(f: T -> Observable[R]): Observable[R]</li>
+				<li>.filter()</li>
+				<li>.zip(), .merge(), .concat()</li>
+			</ul>
+			<aside class="notes">
 				<ul>
-					<li>cancelation</li>
-					<li>Rx.Observable.from(promise)</li>
-					<li>Promise.then() ~ Observable.flatMap()</li>
-					<li>...</li>
+					<li>map ~ projection</li>
+					<li>flatMap is more powerful - it can change the number of elements/events</li>
+					<li>filter ~ selection</li>
+					<li>join ~ zip/merge/concat</li>
+					<li>relational algebra</li>
 				</ul>
-			</section>
+			</aside>
+		</section>
 
-			<section>
-				<h2>Factories</h2>
+		<section>
+			<div class="stretch">
+				<iframe width="1200px" height="800px" src="http://rxmarbles.com/#scan" allowfullscreen="allowfullscreen" frameborder="0" style="max-width: 500%;width: 150%;height: 800px;max-height: 500%;-webkit-transform: scale(0.8);-webkit-transform-origin: 0 0;"></iframe>
+			</div>
+		</section>
+
+		<section>
+			<h2>Hot vs Cold</h2>
+			<ul>
+				<li>Cold ones start producing notifications after subscription (default).</li>
+				<li>Hot ones don't care about subscribers.</li>
+			</ul>
+			<img class="fragment" width="480" height="480" src="./pic/moudro.jpg" alt="thinkosaurus"/>
+			<aside class="notes">
 				<ul>
-					<li>.just()</li>
-					<li>.create()</li>
-					<li>.from()</li>
-					<li>.range()</li>
-					<li>.repeat()</li>
-					<li>.interval()</li>
-					<li>.timer()</li>
-					<li>.empty() / .never() / .throw()</li>
-					<li>...</li>
 				</ul>
+			</aside>
+		</section>
+
+	</section>
+
+			<section data-background-color="rgba(50,200,90,0.4)">
+				<h1><a href="https://gist.github.com/Jiri-Kremser/403d2e11d772174d3957">Demo 1</a></h1>
+				<small>Talk is cheap ;)</small>
 			</section>
 
 			<section>
-				<h2>Combinators for Observable[T]</h2>
-				<ul>
-					<li>.map(f: T -> R): Observable[R]</li>
-					<li>.flatMap(f: T -> Observable[R]): Observable[R]</li>
-					<li>.filter()</li>
-					<li>.zip(), .merge(), .concat()</li>
-				</ul>
-				<aside class="notes">
-					<ul>
-						<li>map ~ projection</li>
-						<li>flatMap is more powerful - it can change the number of elements/events</li>
-						<li>filter ~ selection</li>
-						<li>join ~ zip/merge/concat</li>
-						<li>relational algebra</li>
-					</ul>
-				</aside>
-			</section>
-
-			<section>
-				<div class="stretch">
-					<iframe width="1200px" height="800px" src="http://rxmarbles.com/#scan" allowfullscreen="allowfullscreen" frameborder="0" style="max-width: 500%;width: 150%;height: 800px;max-height: 500%;-webkit-transform: scale(0.8);-webkit-transform-origin: 0 0;"></iframe>
-				</div>
-			</section>
-
-			<!--     demo - 1
-			https://gist.github.com/Jiri-Kremser/403d2e11d772174d3957 -->
-
-			<section>
-				<h2>RX is everywhere (JVM)</h2>
+				<h2>Rx is everywhere (JVM)</h2>
 				<ul>
 					<li>Java<pre><code data-trim contenteditable>
 						Observable.interval(1, TimeUnit.SECONDS)
@@ -319,12 +347,11 @@ Observable.just(3, 1, 4, 1, 5, 9, 2)
 						(Observable/interval 1 TimeUnit/SECONDS)
 						(.subscribe (fn [arg] (println arg))))
 					</code></pre></li>
-
 				</ul>
 			</section>
 
 			<section>
-				<h2>RX is everywhere</h2>
+				<h2>Rx is everywhere</h2>
 				<ul class="wider">
 					<li>.NET<pre><code data-trim contenteditable>
 						Observable.Interval(TimeSpan.FromSeconds(1))
@@ -350,21 +377,91 @@ Observable.just(3, 1, 4, 1, 5, 9, 2)
 			</section>
 
 			<section>
-				<h2>Stream</h2>
-				<img width="500" height="460" src="./pic/zen.jpg" alt="zen"/>
+				<h2>Rx is everywhere</h2>
+				<ul>
+					<li>Angular 2.x</li>
+					<li>ES7</li>
+					<li>Rx.Observable.webSocket('ws://127.0.0.1:8080/foo');</li>
+				</ul>
+				<aside class="notes">
+					<ul>
+						<li>interop between different reactive system</li>
+					</ul>
+				</aside>
 			</section>
 			<!-- </section> -->
 
 
 			<section data-background-color="rgba(50,200,90,0.4)">
-				<!--https://jsbin.com/dinilecori/1/edit?html,js,console,output-->
-				<h1><a href="https://jsbin.com/duzetej/4/edit?html,js,console,output">Demo</a></h1>
-				<small>Talk is cheap ;)</small>
+				<h1><a href="https://jsbin.com/duzetej/4/edit?html,js,console,output">Demo 2</a></h1>
+				<img width="350" src="./pic/zen.jpg" alt="zen"/>
+				<aside class="notes">
+					<ul>
+						<li>Now, that you know that everything is a stream.. We can do the demo.</li>
+					</ul>
+				</aside>
 			</section>
 
 			<section data-background-color="rgba(50,200,90,0.4)">
 				<p data-height="500" data-theme-id="0" data-slug-hash="xZaGWy" data-default-tab="js" data-user="jkremser" class='codepen'>See the Pen <a href='http://codepen.io/jkremser/pen/xZaGWy/'>xZaGWy</a> by Jiri Kremser (<a href='http://codepen.io/jkremser'>@jkremser</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
 				<script async src="https://assets.codepen.io/assets/embed/ei.js"></script>
+			</section>
+
+			<section>
+				<h2>Testability</h2>
+					<pre style="width: 700px !important;"><code data-trim contenteditable>
+it('should filter in only prime numbers', function () {
+  var source = hot('-1--2--^-3-4-5-6--7-8--9--|');
+  var subs =              '^                  !';
+  var expected =          '--3---5----7-------|';
+
+  expectObservable(source.filter(isPrime)).toBe(expected);
+  expectSubscriptions(source.subscriptions).toBe(subs);
+});
+					</code></pre>
+					(<a href="https://github.com/ReactiveX/RxJS/blob/master/spec/operators/filter-spec.js#L28:L35">link</a>)<br/><br/>
+					More of it <a href="https://github.com/ReactiveX/RxJS/tree/master/spec/operators">here</a>.
+				<aside class="notes">
+					<ul>
+						<li>schedulers</li>
+						<li>overloaded combinators</li>
+					</ul>
+				</aside>
+			</section>
+
+			<section>
+				<h2>Maturity</h2>
+				<ul>
+					<li>it is very solid</li>
+				</ul>
+				<table>
+					<tr><td><img src="./pic/netflix.png" height="130"/></td><td><img src="./pic/github.jpg" height="140"/></td><td><img src="./pic/couchbase.png" height="120"/></td></tr>
+					<tr><td><img src="./pic/microsoft.jpg" height="100"/></td><td><img src="./pic/soundcloud.jpg" height="130"/></td><td><img src="./pic/trello.png"  style="background-color: white;" height="100"/></td></tr>
+					<tr><td><img style="background-color: white;" src="./pic/vertx.png" height="100"/></td><td><img style="background-color: white;" src="./pic/swarm.png" height="100"/></td><td><img style="background-color: white;" src="./pic/hawkular.png" height="150"/></td></tr>
+				</table>
+			</section>
+
+			<section>
+				<h2>Recap</h2>
+				<ul>
+					<li>Observable ~ any number of values over any amount of time.</li>
+					<li>Rx make sense for UI as well as for the server-side.</li>
+					<li>Can be done in any language.</li>
+					<li>Cold Observables are lazy.</li>
+				</ul>
+			</section>
+
+			<section>
+				<h2>Want to Learn More?</h2>
+				<ul>
+					<li><a href="https://www.coursera.org/course/reactive">Principles of Reactive Programming</a> @ coursera.org</li>
+					<li><a href="http://reactivex.io/learnrx">reactivex.io/learnrx</a></li>
+				</ul>
+				<aside class="notes">
+					<ul>
+						<li>given by Eric meyer who is also co-author of the reactivemanifesto.</li>
+					</ul>
+				</aside>
 			</section>
 
 			<section data-background-color="rgba(50,200,90,0.4)">
@@ -404,7 +501,7 @@ Observable.just(3, 1, 4, 1, 5, 9, 2)
 		center: true,
 
 		theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
-		transition: Reveal.getQueryHash().transition || 'fade', // default/cube/page/concave/zoom/linear/fade/none
+		transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/fade/none
 
 		// Parallax scrolling
 		// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
