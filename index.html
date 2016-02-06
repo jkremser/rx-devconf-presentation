@@ -47,7 +47,7 @@
 			<section data-state="intro-style">
 				<h1>Reactive Programming</h1>
 				<h2>Async Can Be Easy</h2>
-				<br/>
+				<br/><br/><br/>
 				<p>
 					<a href="https://github.com/Jiri-Kremser">Jiří Kremser</a> &lt; jkremser(at)redhat.com &gt;
 				</p>
@@ -195,19 +195,40 @@
 				</section>
 
 				<section>
+					<table>
+						<tr><td><b>Iterable</b></td><td><b><span style="color:orange;">Observable</span></b></td></tr>
+						<tr><td>pull</td><td>push</td></tr>
+						<tr><td><pre><code>T next()</code></pre></td><td><pre><code>onNext(T)</code></pre></td></tr>
+						<tr><td><pre><code>throws new Exception();</code></pre></td><td><pre><code>onError(Exception)</code></pre></td></tr>
+						<tr><td><pre><code>return;</code></pre></td><td><pre><code>onCompleted()</code></pre></td></tr>
+					</table>
+					<br/>
+					(<span style="color:#aef;">onNext</span>)*(<span style="color: #f97;">onError</span>|<span style="color:#5f1;">onCompleted</span>)?
+					<br/><br/>
+					<div style="text-align: left;">
+						happy paths:<br/>
+						─ <span style="color:#aef;">onNext </span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ … ⟶<br/>
+						─ <span style="color:#aef;"> onNext </span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#5f1;">onCompleted</span> ⟼
+						<br/><br/>
+						less happy path:<br/>
+						─ <span style="color:#aef;">onNext </span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#f97;">onError</span> ⟼<br/>
+					</div>
+				</section>
+
+				<section>
 					<h2>Memory Effectiveness</h2>
 					<pre style="width: 550px !important;"><code data-trim contenteditable>
-						Stream.of(3, 1, 4, 1, 5, 9, 2)
-						.flatMap(x -> Stream.of(x, x))
-						.map(x -> x * 2)
-						.filter(x -> x > new Random().nextInt(9));
+Stream.of(3, 1, 4, 1, 5, 9, 2)
+      .flatMap(x -> Stream.of(x, x))
+      .map(x -> x * 2)
+      .filter(x -> x > new Random().nextInt(9));
 					</pre></code>
 					vs
 					<pre style="width: 550px !important;"><code data-trim contenteditable>
-						Observable.just(3, 1, 4, 1, 5, 9, 2)
-						.flatMap(x -> Observable.just(x, x))
-						.map(x -> x * 2)
-						.filter(x -> x > new Random().nextInt(9));
+Observable.just(3, 1, 4, 1, 5, 9, 2)
+          .flatMap(x -> Observable.just(x, x))
+          .map(x -> x * 2)
+          .filter(x -> x > new Random().nextInt(9));
 					</pre></code>
 					<aside class="notes">
 						<ul>
@@ -233,37 +254,6 @@
 		</section> -->
 
 		<section>
-			<table>
-				<tr><td><b>Iterable</b></td><td><b><span style="color:orange;">Observable</span></b></td></tr>
-				<tr><td>pull</td><td>push</td></tr>
-				<tr><td><pre><code>T next()</code></pre></td><td><pre><code>onNext(T)</code></pre></td></tr>
-				<tr><td><pre><code>throws new Exception();</code></pre></td><td><pre><code>onError(Exception)</code></pre></td></tr>
-				<tr><td><pre><code>return;</code></pre></td><td><pre><code>onCompleted()</code></pre></td></tr>
-			</table>
-			<br/>
-			(<span style="color:#aef;">onNext</span>)*(<span style="color: #f97;">onError</span>|<span style="color:#5f1;">onCompleted</span>)?
-			<br/><br/>
-			<div style="text-align: left;">
-				happy paths:<br/>
-				─ <span style="color:#aef;">onNext </span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ … ⟶<br/>
-				─ <span style="color:#aef;"> onNext </span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#5f1;">onCompleted</span> ⟼
-				<br/><br/>
-				less happy path:<br/>
-				─ <span style="color:#aef;">onNext </span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#aef;">onNext</span> ─ <span style="color:#f97;">onError</span> ⟼<br/>
-			</div>
-		</section>
-
-		<section>
-			<h2>Observable vs Promise/Future</h2>
-			<ul>
-				<li>cancelation</li>
-				<li>Rx.Observable.from(promise)</li>
-				<li>Promise.then() ~ Observable.flatMap()</li>
-				<li>...</li> todo:
-			</ul>
-		</section>
-
-		<section>
 			<h2>Factories</h2>
 			<ul>
 				<li>.just()</li>
@@ -284,7 +274,7 @@
 				<li>.map(f: T -> R): Observable[R]</li>
 				<li>.flatMap(f: T -> Observable[R]): Observable[R]</li>
 				<li>.filter()</li>
-				<li>.zip(), .merge(), .concat()</li>
+				<li>.zip(), .merge(), .concat(), groupBy(), sample(), etc.</li>
 			</ul>
 			<aside class="notes">
 				<ul>
@@ -318,207 +308,255 @@
 
 	</section>
 
-			<section data-background-color="rgba(50,200,90,0.4)">
-				<h1><a href="https://gist.github.com/Jiri-Kremser/403d2e11d772174d3957">Demo 1</a></h1>
-				<small>Talk is cheap ;)</small>
-			</section>
+	<!-- ********************************************** -->
+	<!-- *                    DEMO 1                  * -->
+	<!-- ********************************************** -->
 
-			<section>
-				<h2>Rx is everywhere (JVM)</h2>
+	<section data-background-color="rgba(50,200,90,0.4)">
+		<h1><a href="https://gist.github.com/Jiri-Kremser/403d2e11d772174d3957">Demo 1</a></h1>
+		<small>Talk is cheap ;)</small>
+	</section>
+
+	<section data-background="#8c4738">
+		<section>
+			<h2>Rx is everywhere (JVM)</h2>
+			<ul>
+				<li>Java<pre><code data-trim contenteditable>
+Observable.interval(1, TimeUnit.SECONDS)
+          .subscribe(System.out::println);
+				</code></pre></li>
+				<li>Scala<pre><code data-trim contenteditable>
+Observable.interval(1, TimeUnit.SECONDS)
+          .subscribe(println(_))
+				</code></pre></li>
+				<li>Groovy<pre><code data-trim contenteditable>
+Observable.interval(1, TimeUnit.SECONDS)
+          .subscribe{println it}
+				</code></pre></li>
+				<li>JRuby<pre><code data-trim contenteditable>
+Observable.interval(1, TimeUnit.SECONDS)
+          .subscribe {|val| puts val}
+				</code></pre></li>
+				<li>Clojure<pre><code data-trim contenteditable>
+(->
+  (Observable/interval 1 TimeUnit/SECONDS)
+  (.subscribe (fn [arg] (println arg))))
+				</code></pre></li>
+			</ul>
+		</section>
+
+		<section>
+			<h2>Rx is everywhere</h2>
+			<ul class="wider">
+				<li>.NET<pre><code data-trim contenteditable>
+Observable.Interval(TimeSpan.FromSeconds(1))
+          .Subscribe(x => Console.WriteLine(x));
+				</code></pre></li>
+				<li>C++<pre><code data-trim contenteditable>
+rx::observable&lt;>::interval(std::chrono::seconds(1))
+   .subscribe(
+     [](long v){std::cout &lt;&lt; v;},
+     [](){std::cout &lt;&lt; "OnCompleted";}
+   )
+				</code></pre></li>
+				<li>Python<pre><code data-trim contenteditable>
+Observable.interval(1000)
+          .subscribe(lambda x:  print x)
+				</code></pre></li>
+				<li>PHP<pre><code data-trim contenteditable>
+\Rx\Observable::interval(1000, $scheduler)
+              ->subscribe(function ($x) { echo $x; });
+				</code></pre></li>
+				<li>Dart, Haskell, Android SDK, Objective-C &amp; Swift, etc.</li>
+			</ul>
+		</section>
+
+		<section>
+			<h2>Rx is everywhere</h2>
+			<ul>
+				<li>Angular 2.x</li>
+				<li>ES7</li>
+				<li>reactive-streams.org</li>
+				<li>${your_project}</li>
+			</ul>
+			<aside class="notes">
 				<ul>
-					<li>Java<pre><code data-trim contenteditable>
-						Observable.interval(1, TimeUnit.SECONDS)
-						.subscribe(System.out::println);
-					</code></pre></li>
-					<li>Scala<pre><code data-trim contenteditable>
-						Observable.interval(1, TimeUnit.SECONDS)
-						.subscribe(println(_))
-					</code></pre></li>
-					<li>Groovy<pre><code data-trim contenteditable>
-						Observable.interval(1, TimeUnit.SECONDS)
-						.subscribe{println it}
-					</code></pre></li>
-					<li>JRuby<pre><code data-trim contenteditable>
-						Observable.interval(1, TimeUnit.SECONDS)
-						.subscribe {|val| puts val}
-					</code></pre></li>
-					<li>Clojure<pre><code data-trim contenteditable>
-						(->
-						(Observable/interval 1 TimeUnit/SECONDS)
-						(.subscribe (fn [arg] (println arg))))
-					</code></pre></li>
+					<li>interop between different reactive system</li>
 				</ul>
-			</section>
+			</aside>
+		</section>
+	</section>
 
-			<section>
-				<h2>Rx is everywhere</h2>
-				<ul class="wider">
-					<li>.NET<pre><code data-trim contenteditable>
-						Observable.Interval(TimeSpan.FromSeconds(1))
-						.Subscribe(x => Console.WriteLine(x));
-					</code></pre></li>
-					<li>C++<pre><code data-trim contenteditable>
-						rx::observable&lt;>::interval(std::chrono::seconds(1))
-						.subscribe(
-						[](long v){std::cout &lt;&lt; v;},
-						[](){std::cout &lt;&lt; "OnCompleted";}
-						)
-					</code></pre></li>
-					<li>Python<pre><code data-trim contenteditable>
-						Observable.interval(1000)
-						.subscribe(lambda x:  print x)
-					</code></pre></li>
-					<li>PHP<pre><code data-trim contenteditable>
-						\Rx\Observable::interval(1000, $scheduler)
-						->subscribe(function ($x) { echo $x; });
-					</code></pre></li>
-					<li>Dart, Haskell, Android SDK, Objective-C &amp; Swift, etc.</li>
-				</ul>
-			</section>
+	<section data-transition="none" data-background-transition="none">
+		<h2>Websockets</h2>
+		<pre><code data-trim contenteditable>
+const wsUri = 'wss://echo.websocket.org';
 
-			<section>
-				<h2>Rx is everywhere</h2>
-				<ul>
-					<li>Angular 2.x</li>
-					<li>ES7</li>
-					<li>Rx.Observable.webSocket('ws://127.0.0.1:8080/foo');</li>
-				</ul>
-				<aside class="notes">
-					<ul>
-						<li>interop between different reactive system</li>
-					</ul>
-				</aside>
-			</section>
-			<!-- </section> -->
+Rx.Observable
+  .webSocket(wsUri)
+  .filter((e) => e.topic === 'kittens')
+  .subscribe((e) => console.log(e));
+		</code></pre>
+		<aside class="notes">
+			<ul>
+				<li></li>
+			</ul>
+		</aside>
+	</section>
+
+	<section data-background-transition="none" data-transition="none">
+		<h2>Websockets</h2>
+		<pre><code data-trim contenteditable>
+			const wsUri = 'wss://echo.websocket.org';
+
+			Rx.Observable
+			.webSocket(wsUri)
+			.groupBy((e) => e.topic)
+			.subscribe((e) => console.log(e));
+		</code></pre>
+		<aside class="notes">
+			<ul>
+				<li></li>
+			</ul>
+		</aside>
+	</section>
+	<!-- </section> -->
 
 
-			<section data-background-color="rgba(50,200,90,0.4)">
-				<h1><a href="https://jsbin.com/duzetej/4/edit?html,js,console,output">Demo 2</a></h1>
-				<img width="350" src="./pic/zen.jpg" alt="zen"/>
-				<aside class="notes">
-					<ul>
-						<li>Now, that you know that everything is a stream.. We can do the demo.</li>
-					</ul>
-				</aside>
-			</section>
+	<!-- ********************************************** -->
+	<!-- *                    DEMO 2                  * -->
+	<!-- ********************************************** -->
+	<section data-background-color="rgba(50,200,90,0.4)">
+		<h1><a href="https://jsbin.com/duzetej/4/edit?html,js,console,output">Demo 2</a></h1>
+		<img width="350" src="./pic/zen.jpg" alt="zen"/>
+		<aside class="notes">
+			<ul>
+				<li>Now, that you know that everything is a stream.. We can do the demo.</li>
+			</ul>
+		</aside>
+	</section>
 
-			<section data-background-color="rgba(50,200,90,0.4)">
-				<p data-height="500" data-theme-id="0" data-slug-hash="xZaGWy" data-default-tab="js" data-user="jkremser" class='codepen'>See the Pen <a href='http://codepen.io/jkremser/pen/xZaGWy/'>xZaGWy</a> by Jiri Kremser (<a href='http://codepen.io/jkremser'>@jkremser</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
-				<script async src="https://assets.codepen.io/assets/embed/ei.js"></script>
-			</section>
+	<section data-background-color="rgba(50,200,90,0.4)">
+		<p data-height="500" data-theme-id="0" data-slug-hash="xZaGWy" data-default-tab="js" data-user="jkremser" class='codepen'>See the Pen <a href='http://codepen.io/jkremser/pen/xZaGWy/'>xZaGWy</a> by Jiri Kremser (<a href='http://codepen.io/jkremser'>@jkremser</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
+		<script async src="https://assets.codepen.io/assets/embed/ei.js"></script>
+	</section>
 
-			<section>
-				<h2>Testability</h2>
-					<pre style="width: 700px !important;"><code data-trim contenteditable>
+	<section data-transition="linear" data-background="#206f95" data-background-transition="slide">
+		<section>
+			<h2>Testability</h2>
+			<pre style="width: 700px !important;"><code data-trim contenteditable>
 it('should filter in only prime numbers', function () {
-  var source = hot('-1--2--^-3-4-5-6--7-8--9--|');
-  var subs =              '^                  !';
-  var expected =          '--3---5----7-------|';
+	var source = hot('-1--2--^-3-4-5-6--7-8--9--|');
+	var subs =              '^                  !';
+	var expected =          '--3---5----7-------|';
 
-  expectObservable(source.filter(isPrime)).toBe(expected);
-  expectSubscriptions(source.subscriptions).toBe(subs);
+	expectObservable(source.filter(isPrime)).toBe(expected);
+	expectSubscriptions(source.subscriptions).toBe(subs);
 });
-					</code></pre>
-					(<a href="https://github.com/ReactiveX/RxJS/blob/master/spec/operators/filter-spec.js#L28:L35">link</a>)<br/><br/>
-					More of it <a href="https://github.com/ReactiveX/RxJS/tree/master/spec/operators">here</a>.
-				<aside class="notes">
-					<ul>
-						<li>schedulers</li>
-						<li>overloaded combinators</li>
-					</ul>
-				</aside>
-			</section>
-
-			<section>
-				<h2>Maturity</h2>
+			</code></pre>
+			(<a href="https://github.com/ReactiveX/RxJS/blob/master/spec/operators/filter-spec.js#L28:L35">link</a>)<br/><br/>
+			More of it <a href="https://github.com/ReactiveX/RxJS/tree/master/spec/operators">here</a>.
+			<aside class="notes">
 				<ul>
-					<li>it is very solid</li>
+					<li>schedulers</li>
+					<li>overloaded combinators</li>
 				</ul>
-				<table>
-					<tr><td><img src="./pic/netflix.png" height="130"/></td><td><img src="./pic/github.jpg" height="140"/></td><td><img src="./pic/couchbase.png" height="120"/></td></tr>
-					<tr><td><img src="./pic/microsoft.jpg" height="100"/></td><td><img src="./pic/soundcloud.jpg" height="130"/></td><td><img src="./pic/trello.png"  style="background-color: white;" height="100"/></td></tr>
-					<tr><td><img style="background-color: white;" src="./pic/vertx.png" height="100"/></td><td><img style="background-color: white;" src="./pic/swarm.png" height="100"/></td><td><img style="background-color: white;" src="./pic/hawkular.png" height="150"/></td></tr>
-				</table>
-			</section>
+			</aside>
+		</section>
 
-			<section>
-				<h2>Recap</h2>
+		<section>
+			<h2>Maturity</h2>
+			<ul>
+				<li>it is very solid</li>
+			</ul>
+			<table>
+				<tr><td><img src="./pic/netflix.png" height="130"/></td><td><img src="./pic/github.jpg" height="140"/></td><td><img src="./pic/couchbase.png" height="120"/></td></tr>
+				<tr><td><img src="./pic/microsoft.jpg" height="100"/></td><td><img src="./pic/soundcloud.jpg" height="130"/></td><td><img src="./pic/trello.png"  style="background-color: white;" height="100"/></td></tr>
+				<tr><td><img style="background-color: white;" src="./pic/vertx.png" height="100"/></td><td><img style="background-color: white;" src="./pic/swarm.png" height="100"/></td><td><img style="background-color: white;" src="./pic/hawkular.png" height="150"/></td></tr>
+			</table>
+		</section>
+
+		<section>
+			<h2>Recap</h2>
+			<ul>
+				<li>Observable ~ any number of values over any amount of time.</li>
+				<li>Rx make sense for UI as well as for the server-side.</li>
+				<li>Can be done in any language.</li>
+				<li>Cold Observables are lazy.</li>
+			</ul>
+		</section>
+
+		<section>
+			<h2>Want to Learn More?</h2>
+			<ul>
+				<li><a href="https://www.coursera.org/course/reactive">Principles of Reactive Programming</a> @ coursera.org</li>
+				<li><a href="http://reactivex.io/learnrx">reactivex.io/learnrx</a></li>
+				<li><a href="http://www.reactivemanifesto.org">reactivemanifesto.org</a></li>
+			</ul>
+			<aside class="notes">
 				<ul>
-					<li>Observable ~ any number of values over any amount of time.</li>
-					<li>Rx make sense for UI as well as for the server-side.</li>
-					<li>Can be done in any language.</li>
-					<li>Cold Observables are lazy.</li>
+					<li>given by Eric meyer who is also co-author of the reactivemanifesto.</li>
 				</ul>
-			</section>
+			</aside>
+		</section>
+	</section>
 
-			<section>
-				<h2>Want to Learn More?</h2>
-				<ul>
-					<li><a href="https://www.coursera.org/course/reactive">Principles of Reactive Programming</a> @ coursera.org</li>
-					<li><a href="http://reactivex.io/learnrx">reactivex.io/learnrx</a></li>
-				</ul>
-				<aside class="notes">
-					<ul>
-						<li>given by Eric meyer who is also co-author of the reactivemanifesto.</li>
-					</ul>
-				</aside>
-			</section>
+	<section data-background-color="rgba(50,200,90,0.4)">
+		<h2>Make your APIs observable</h2><br/><br/>
+		<p>This presentation</p>
+		<img width="250" height="250" src="./pic/qr.png" alt="QR code with link to slides"/>
+		<p><a href="https://goo.gl/TgFwfq" target="_blank">https://goo.gl/TgFwfq</a></p><br/><br/>
+		Jiří Kremser
+	</section>
 
-			<section data-background-color="rgba(50,200,90,0.4)">
-				<h2>Make your APIs observable</h2><br/><br/>
-				<p>This presentation</p>
-				<img width="250" height="250" src="./pic/qr.png" alt="QR code with link to slides"/>
-				<p><a href="https://goo.gl/TgFwfq" target="_blank">https://goo.gl/TgFwfq</a></p><br/><br/>
-				Jiří Kremser
-			</section>
 
-		</div>
-	</div>
+</div>
+</div>
 
-	<script src="lib/js/head.min.js"></script>
-	<script src="js/reveal.min.js"></script>
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.min.js"></script>
 
-	<script>
-	// Full list of configuration options available here:
-	// https://github.com/hakimel/reveal.js#configuration
-	Reveal.initialize({
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
 
-		// The "normal" size of the presentation, aspect ratio will be preserved
-		// when the presentation is scaled to fit different resolutions. Can be
-		// specified using percentage units.
-		width: 960,
-		height: 700,
+	// The "normal" size of the presentation, aspect ratio will be preserved
+	// when the presentation is scaled to fit different resolutions. Can be
+	// specified using percentage units.
+	width: 960,
+	height: 700,
 
-		// Factor of the display size that should remain empty around the content
-		margin: 0.1,
+	// Factor of the display size that should remain empty around the content
+	margin: 0.1,
 
-		// Bounds for smallest/largest possible scale to apply to content
-		minScale: 0.2,
-		maxScale: 1.0,
-		controls: true,
-		progress: true,
-		history: true,
-		center: true,
+	// Bounds for smallest/largest possible scale to apply to content
+	minScale: 0.2,
+	maxScale: 1.0,
+	controls: true,
+	progress: true,
+	history: true,
+	center: true,
 
-		theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
-		transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/fade/none
+	theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+	transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/fade/none
 
-		// Parallax scrolling
-		// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
-		// parallaxBackgroundSize: '2100px 900px',
+	// Parallax scrolling
+	// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+	// parallaxBackgroundSize: '2100px 900px',
 
-		// Optional libraries used to extend on reveal.js
-		dependencies: [
-			{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-			{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-			{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-			{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-			{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-			{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
-		]
-	});
+	// Optional libraries used to extend on reveal.js
+	dependencies: [
+		{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+		{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+		{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+		{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+		{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+		{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+	]
+});
 
-	</script>
-	<script src="//localhost:35729/livereload.js"></script>
+</script>
+<script src="//localhost:35729/livereload.js"></script>
 </body>
 </html>
