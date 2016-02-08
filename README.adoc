@@ -1,7 +1,9 @@
-rx-devconf-presentation
-=====================
+= rx-devconf-presentation
+
 Jiri Kremser <jkremser@redhat.com>
 v1.0, 2016-02-06
+
+live version: https://jiri-kremser.github.io/rx-devconf-presentation
 
 Slides created using the link:https://github.com/hakimel/reveal.js/[reveal.js] Presentation Framework.
 
@@ -24,7 +26,7 @@ Slides created using the link:https://github.com/hakimel/reveal.js/[reveal.js] P
 
 --
 
-== Serving the Presentation
+== Serving the Presentation (supports live reload)
  $ grunt serve
 
 
